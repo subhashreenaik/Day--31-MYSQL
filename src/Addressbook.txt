@@ -1,0 +1,197 @@
+UC1:-Create database name Addressbook_service in sql
+ 
+mysql> CREATE DATABASE addressbook_service
+    -> ;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++---------------------+
+| Database            |
++---------------------+
+| addressbook_service |
+| information_schema  |
+| mysql               |
+| payroll_service     |
+| performance_schema  |
+| sys                 |
++---------------------+
+6 rows in set (0.01 sec)
+
+mysql> use addressbook_service
+Database changed
+
+UC2:->Ability to create a Address Book Table with first and last names, address, city,
+state, zip, phone number and email as its attributes
+
+mysql> CREATE TABLE address_book
+    -> (
+    -> first_name  VARCHAR(255),
+    -> last_name  VARCHAR(255),
+    -> address    VARCHAR(255),
+    -> email  VARCHAR(255),
+    -> phonenumber  VARCHAR(15),
+    -> city    VARCHAR(255),
+    -> state    VARCHAR(255),
+    ->  zip         VARCHAR(255),
+    -> contact_id  INT  NOT NULL  AUTO_INCREMENT,
+    -> PRIMARY KEY(contact_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+UC3:-> Ability to insert new values to addressbook
+
+mysql> INSERT INTO address_book
+    -> VALUES('sudha','Naik','near kalyan mondop','abf1@gmail.com','91 1234567891','bbsr','odisha','411014','2');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO address_book(first_name,last_name,address,email,phonenumber,city,state,zip,contact_id)
+    -> VALUES('Subhashree','Naik','near kalyan mondop','abc1@gmail.com','91 1234567890','pune','maharastra','411017','1');
+Query OK, 1 row affected (0.01 sec)
+
+
+
+UC4:-Ability to edit the values of the column by using name
+
+mysql> UPDATE address_book
+    -> SET  state = 'bihar',city = 'patna' WHERE  first_name = 'sudha';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from address_book;
++------------+-----------+--------------------+----------------+---------------+-------+------------+--------+------------+
+| first_name | last_name | address            | email          | phonenumber   | city  | state      | zip    | contact_id |
++------------+-----------+--------------------+----------------+---------------+-------+------------+--------+------------+
+| Subhashree | Naik      | near kalyan mondop | abc1@gmail.com | 91 1234567890 | pune  | maharastra | 411017 |          1 |
+| sudha      | Naik      | near kalyan mondop | abf1@gmail.com | 91 1234567891 | patna | bihar      | 411014 |          2 |
++------------+-----------+--------------------+----------------+---------------+-------+------------+--------+------------+
+2 rows in set (0.01 sec)
+
+
+UC5:-Ability to delete a person using name
+
+mysql> DELETE FROM address_book WHERE first_name='sudha';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from  address_book;
++------------+-----------+--------------------+----------------+---------------+------+------------+--------+------------+
+| first_name | last_name | address            | email          | phonenumber   | city | state      | zip    | contact_id |
++------------+-----------+--------------------+----------------+---------------+------+------------+--------+------------+
+| Subhashree | Naik      | near kalyan mondop | abc1@gmail.com | 91 1234567890 | pune | maharastra | 411017 |          1 |
++------------+-----------+--------------------+----------------+---------------+------+------------+--------+------------+
+1 row in set (0.00 sec)
+
+UC6:-> Ability to retrive person's belonging by state or city name
+
+mysql> select * from Address_Book where state = 'odisha';
++-------------+-----------+--------------------+-------------------+---------------+------+--------+--------+------------+
+| first_name  | last_name | address            | email             | phonenumber   | city | state  | zip    | contact_id |
++-------------+-----------+--------------------+-------------------+---------------+------+--------+--------+------------+
+| sudha       | Naik      | near kalyan mondop | abf1@gmail.com    | 91 1234567891 | bbsr | odisha | 411014 |          4 |
+| Bhagyashree | pradhan   | near kalyan mondop | bhagya2@gmail.com | 91 1234567891 | bbsr | odisha | 411014 |          5 |
++-------------+-----------+--------------------+-------------------+---------------+------+--------+--------+------------+
+2 rows in set (0.00 sec)
+
+ UC7 :- Ability to understand the size of address book by City and State
+
+mysql> SELECT COUNT(city) FROM address_book;
++-------------+
+| COUNT(city) |
++-------------+
+|           4 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT COUNT(city) FROM address_book
+    -> WHERE state="odisha";
++-------------+
+| COUNT(city) |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.00 sec)
+
+
+UC8 :- Ability to retrieve entries sorted alphabetically by Person’s name for a given city
+
+
+mysql> SELECT first_name, last_name,city FROM address_book
+    -> ORDER BY first_name;
++-------------+-----------+-----------+
+| first_name  | last_name | city      |
++-------------+-----------+-----------+
+| Bhagyashree | pradhan   | bbsr      |
+| Smita       | Mishra    | bangalore |
+| Subhashree  | Naik      | pune      |
+| sudha       | Naik      | bbsr      |
++-------------+-----------+-----------+
+4 rows in set (0.00 sec)
+
+UC9 :- Ability to identify each Address Book with name and Type.
+
+ ALTER TABLE address_book
+    -> ADD  department_type  VARCHAR(30);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE address_book SET department_type = "Sales" WHERE first_name = "Subhashree";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE address_book SET department_type = "Marketing" WHERE first_name = "Bhagyashree";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE address_book SET department_type = "Marketing" WHERE first_name = "Sudha";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE address_book SET department_type = "Sale" WHERE first_name = "Smita";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from address_book
+    -> ;
++-------------+-----------+--------------------+-------------------+---------------+-----------+------------+--------+------------+-----------------+
+| first_name  | last_name | address            | email             | phonenumber   | city      | state      | zip    | contact_id | department_type |
++-------------+-----------+--------------------+-------------------+---------------+-----------+------------+--------+------------+-----------------+
+| Subhashree  | Naik      | near kalyan mondop | abc1@gmail.com    | 91 1234567890 | pune      | maharastra | 411017 |          1 | Sales           |
+| Smita       | Mishra    | near kalyan mondop | situ@gmail.com    | 91 1235567891 | bangalore | karnataka  | 411014 |          3 | Sale            |
+| sudha       | Naik      | near kalyan mondop | abf1@gmail.com    | 91 1234567891 | bbsr      | odisha     | 411014 |          4 | Marketing       |
+| Bhagyashree | pradhan   | near kalyan mondop | bhagya2@gmail.com | 91 1234567891 | bbsr      | odisha     | 411014 |          5 | Marketing       |
++-------------+-----------+--------------------+-------------------+---------------+-----------+------------+--------+------------+-----------------+
+4 rows in set (0.00 sec)
+
+UC10 :- Ability to get number of contact persons i.e. count by type
+
+mysql> SELECT COUNT(first_name) FROM address_book WHERE Department_Type = "Sales";
++-------------------+
+| COUNT(first_name) |
++-------------------+
+|                 1 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(first_name) FROM address_book WHERE Department_Type = "Marketing";
++-------------------+
+| COUNT(first_name) |
++-------------------+
+|                 2 |
++-------------------+
+1 row in set (0.00 sec)
+
+UC11 :- Ability to add person to both Friend and Family
+
+mysql> INSERT INTO address_book
+    -> VALUES('Geeta','tiwari','near siv temple','geeta@gmail.com','91 12367867891','banalore','karnataka','411014',6,'Sales');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO address_book
+    -> VALUES('Neeta','patel','near siv temple','neeta@gmail.com','91 12367867891','banalore','karnataka','411014',7,'Sales');
+Query OK, 1 row affected (0.01 sec)
+
+
+
+
+
+
+
