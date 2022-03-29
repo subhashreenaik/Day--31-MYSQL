@@ -1,0 +1,161 @@
+
+
+--------Implement the ER Diagram into Payroll Service DB------------
+
+mysql> CREATE TABLE employee
+    -> (
+    -> employee_id  int(20),
+    -> employee_name varchar(100)  NOT NULL,
+    -> date_of_birth  varchar(20)  NOT NULL,
+    -> PRIMARY KEY(employee_id)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.12 sec)
+
+mysql> INSERT INTO employee VALUES (1,'SubhashreeNaik','1998-10-22'),(2,'PiyshPatel','1997-12-19'),(3,'SheeramChoudhary','2000-10-11'),(4,'Jyoti Naik','1993-8-10');
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee add gender char(1) not null after employee_name;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  UPDATE employee set gender='F' WHERE  employee_id=1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>  UPDATE employee set gender='M' WHERE  employee_id=2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>  UPDATE employee set gender='M' WHERE  employee_id=3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>  UPDATE employee set gender='F' WHERE  employee_id=4;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++-------------+------------------+--------+---------------+
+| employee_id | employee_name    | gender | date_of_birth |
++-------------+------------------+--------+---------------+
+|           1 | SubhashreeNaik   | F      | 1998-10-22    |
+|           2 | PiyshPatel       | M      | 1997-12-19    |
+|           3 | SheeramChoudhary | M      | 2000-10-11    |
+|           4 | Jyoti Naik       | F      | 1993-8-10     |
++-------------+------------------+--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE  employee_Contacts (employee_id int(10), phonenumber varchar(200) NOT NULL, address varchar(200) NOT NULL,foreign key (employee_id) references employee (employee_id));
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> INSERT INTO employee_contacts
+    -> VALUES
+    -> (1,'9008622627','near jagannath temple'),
+    -> (2,'9887654312','near post office'),
+    -> (3,'9881111111','Mahatma colony'),
+    -> (4,'9881112222','ganga colony');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_contacts;
++-------------+-------------+-----------------------+
+| employee_id | phonenumber | address               |
++-------------+-------------+-----------------------+
+|           1 | 9008622627  | near jagannath temple |
+|           2 | 9887654312  | near post office      |
+|           3 | 9881111111  | Mahatma colony        |
+|           4 | 9881112222  | ganga colony          |
++-------------+-------------+-----------------------+
+4 rows in set (0.00 sec)
+
+mysql> alter table employee_Contacts add City varchar(50) not null after Address;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_Contacts add state varchar(50) not null after City;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_Contacts add country varchar(50) not null after state;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE employee_Contacts set City='pune', state='maharastra',country='India' WHERE employee_id=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_Contacts set City='Nagpur', state='maharastra',country='India' WHERE employee_id=2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_Contacts set City='Mumbai', state='maharastra',country='India' WHERE employee_id=3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employee_Contacts set City='Nashik', state='maharastra',country='India' WHERE employee_id=4;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_Contacts;
++-------------+-------------+-----------------------+--------+------------+---------+
+| employee_id | phonenumber | address               | City   | state      | country |
++-------------+-------------+-----------------------+--------+------------+---------+
+|           1 | 9008622627  | near jagannath temple | pune   | maharastra | India   |
+|           2 | 9887654312  | near post office      | Nagpur | maharastra | India   |
+|           3 | 9881111111  | Mahatma colony        | Mumbai | maharastra | India   |
+|           4 | 9881112222  | ganga colony          | Nashik | maharastra | India   |
++-------------+-------------+-----------------------+--------+------------+---------+
+4 rows in set (0.00 sec)
+
+
+mysql> CREATE TABLE  employee_Salary (Salary_ID int,Employee_ID int(10) not null,Basic_Pay float not null,Deducation float not null,Taxable_Pay float not null,Tax float not null,Net_Pay float not null, Salary int not null,PRIMARY KEY(Salary_ID),
+    -> foreign key (employee_id) references employee (employee_id));
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> INSERT INTO  employee_Salary VALUES (1,1,5000,2500,1000,2000,3000,30000),(2,1,5000,1000,3000,500,8000,40000),
+    -> (3,2,4000,3000,2000,5500,2000,50050),(4,3,3500,200,5000,4500,6000,85600);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_Salary;
++-----------+-------------+-----------+------------+-------------+------+---------+--------+
+| Salary_ID | Employee_ID | Basic_Pay | Deducation | Taxable_Pay | Tax  | Net_Pay | Salary |
++-----------+-------------+-----------+------------+-------------+------+---------+--------+
+|         1 |           1 |      5000 |       2500 |        1000 | 2000 |    3000 |  30000 |
+|         2 |           1 |      5000 |       1000 |        3000 |  500 |    8000 |  40000 |
+|         3 |           2 |      4000 |       3000 |        2000 | 5500 |    2000 |  50050 |
+|         4 |           3 |      3500 |        200 |        5000 | 4500 |    6000 |  85600 |
++-----------+-------------+-----------+------------+-------------+------+---------+--------+
+4 rows in set (0.00 sec)
+
+UC12 :- Ensure all retrieve queries done especially in UC 4, UC 5 and UC 7 are working with new table structure
+
+
+mysql> SELECT salary FROM employee_Salary WHERE  Employee_ID=1;
++--------+
+| salary |
++--------+
+|  30000 |
+|  40000 |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT MAX(salary) FROM employee_Salary;
++-------------+
+| MAX(salary) |
++-------------+
+|       85600 |
++-------------+
+1 row in set (0.00 sec)
+
+SELECT COUNT(salary) FROM employee_Salary;
++---------------+
+| COUNT(salary) |
++---------------+
+|             4 |
++---------------+
+1 row in set (0.01 sec)
+
+
+
